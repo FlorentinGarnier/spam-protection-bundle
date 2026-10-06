@@ -1,6 +1,8 @@
 # Spam Protection Bundle
 
 [![CI](https://github.com/FlorentinGarnier/spam-protection-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/FlorentinGarnier/spam-protection-bundle/actions/workflows/ci.yml)
+[![Latest Version](https://img.shields.io/packagist/v/florentingarnier/spam-protection-bundle.svg)](https://packagist.org/packages/florentingarnier/spam-protection-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/florentingarnier/spam-protection-bundle.svg)](https://packagist.org/packages/florentingarnier/spam-protection-bundle)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![PHP](https://img.shields.io/badge/php-%5E8.2-777bb4.svg)
 ![Symfony](https://img.shields.io/badge/symfony-5.4%20%7C%206.4%20%7C%207.4%20%7C%208-black.svg)
@@ -28,15 +30,6 @@ Using Sylius? See [florentingarnier/sylius-spam-protection-plugin](https://githu
 - JavaScript in the visitor's browser
 
 ## Installation
-
-The bundle is not published on Packagist yet. Declare the repositories in your `composer.json`:
-
-```json
-"repositories": [
-    {"type": "vcs", "url": "https://github.com/FlorentinGarnier/spam-protection"},
-    {"type": "vcs", "url": "https://github.com/FlorentinGarnier/spam-protection-bundle"}
-]
-```
 
 ```bash
 composer require florentingarnier/spam-protection-bundle

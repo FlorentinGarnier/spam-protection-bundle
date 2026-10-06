@@ -8,6 +8,16 @@ changes.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-06
+
+### Changed
+
+- The package is available on [Packagist](https://packagist.org/packages/florentingarnier/spam-protection-bundle): the installation instructions no longer declare Git repositories.
+
+### Removed
+
+- The `repositories` entry of `composer.json`: florentingarnier/spam-protection is now installed from Packagist.
+
 ## [0.1.0] - 2026-10-06
 
 ### Added
@@ -15,5 +25,6 @@ changes.
 - Initial release: `SpamProtectionType` form type, JavaScript proof-of-work solver, `spam-protection:refresh-ip-lists` command, form theme, English / French / German translations and `spam_protection` Monolog channel.
 - Support for Symfony 5.4, 6.4, 7.4 and 8.x, tested on each of them.
 
-[Unreleased]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/FlorentinGarnier/spam-protection-bundle/releases/tag/v0.1.0

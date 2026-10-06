@@ -52,12 +52,6 @@
             "FlorentinGarnier\\SpamProtectionBundle\\Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/FlorentinGarnier/spam-protection"
-        }
-    ],
     "config": {
         "sort-packages": true
     }
