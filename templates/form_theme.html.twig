@@ -1,0 +1,4 @@
+{# Bots fill every input they find: the protection fields stay out of sight and out of the accessibility tree. #}
+{% block spam_protection_row %}
+    <div hidden aria-hidden="true">{{ form_widget(form) }}</div>
+{% endblock %}

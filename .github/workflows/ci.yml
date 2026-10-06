@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Security fixes only, kept while known applications still run on it.
+          - { php: '8.2', symfony: '5.4.*' }
+          # Previous LTS
+          - { php: '8.2', symfony: '6.4.*' }
+          # Current LTS
+          - { php: '8.3', symfony: '7.4.*' }
+          # Latest stable version (Symfony 8 requires PHP 8.4)
+          - { php: '8.4', symfony: '8.*' }
+          - { php: '8.5', symfony: '8.*' }
+    name: PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}
+    env:
+      SYMFONY_REQUIRE: ${{ matrix.symfony }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: flex
+      - uses: ramsey/composer-install@v3
+      - run: vendor/bin/phpunit
