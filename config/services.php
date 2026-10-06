@@ -22,6 +22,7 @@ use FlorentinGarnier\SpamProtection\SubmissionToken;
 use FlorentinGarnier\SpamProtectionBundle\Command\RefreshIpReputationListsCommand;
 use FlorentinGarnier\SpamProtectionBundle\Form\SpamProtectionType;
 use FlorentinGarnier\SpamProtectionBundle\IpReputation\IpReputationListUpdater;
+use FlorentinGarnier\SpamProtectionBundle\Lock\SymfonyTokenLock;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -29,8 +30,11 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
+    $services->set(SymfonyTokenLock::class)
+        ->args([service('florentin_garnier_spam_protection.lock_factory')]);
+
     $services->set(SingleUseTokenRegistry::class)
-        ->args([service('florentin_garnier_spam_protection.cache')]);
+        ->args([service('florentin_garnier_spam_protection.cache'), service(SymfonyTokenLock::class)->nullOnInvalid()]);
 
     $services->set(SubmissionToken::class)
         ->args([param('florentin_garnier_spam_protection.secret'), service(SingleUseTokenRegistry::class)]);

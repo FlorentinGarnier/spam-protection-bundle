@@ -56,6 +56,9 @@ florentin_garnier_spam_protection:
     secret: '%kernel.secret%'
     # PSR-6 pool keeping used tokens and attempt counters; it must be shared by every web server.
     cache_pool: cache.app
+    # Symfony Lock factory preventing two simultaneous requests from consuming the same token.
+    # Its store must be shared by every web server. Null disables the lock (not recommended).
+    lock_factory: lock.factory
     # Leading zero bits required from the proof of work of a first submission (1 to 20).
     base_difficulty: 10
     # Weighted attempts allowed per form and IP address before submissions are rejected.
@@ -218,6 +221,10 @@ the `messages` domain. Override it in your application's translation files.
   shares the proxy's IP address and the rate limit applies to everyone. If the logs always show the same
   `ip_hash`, this is the cause.
 - [ ] **Shared cache.** With several web servers, `cache_pool` must use a shared storage such as Redis.
+- [ ] **Shared lock store.** Tokens are locked while they are consumed, so that a submission sent twice at the
+  same instant is accepted only once. FrameworkBundle enables `lock.factory` as soon as `symfony/lock` is
+  installed, but its default store (semaphore or flock) is local to one server. With several web servers,
+  configure a shared store, for example `framework: { lock: '%env(REDIS_URL)%' }`.
 - [ ] **IP lists.** The command runs after the deployment and every day.
 
 ## Testing

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace FlorentinGarnier\SpamProtectionBundle\DependencyInjection;
 
+use FlorentinGarnier\SpamProtectionBundle\Lock\SymfonyTokenLock;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -33,6 +34,12 @@ final class FlorentinGarnierSpamProtectionExtension extends Extension implements
         $container->setAlias('florentin_garnier_spam_protection.cache', $config['cache_pool']);
 
         (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__, 2) . '/config')))->load('services.php');
+
+        if (null === $config['lock_factory']) {
+            $container->removeDefinition(SymfonyTokenLock::class);
+        } else {
+            $container->setAlias('florentin_garnier_spam_protection.lock_factory', $config['lock_factory']);
+        }
     }
 
     /**

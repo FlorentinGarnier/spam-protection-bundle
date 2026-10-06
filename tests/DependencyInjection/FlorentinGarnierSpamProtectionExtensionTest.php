@@ -14,15 +14,20 @@ declare(strict_types=1);
 namespace FlorentinGarnier\SpamProtectionBundle\Tests\DependencyInjection;
 
 use FlorentinGarnier\SpamProtection\IpReputation\IpReputation;
+use FlorentinGarnier\SpamProtection\SingleUseTokenRegistry;
 use FlorentinGarnier\SpamProtection\SpamProtection;
 use FlorentinGarnier\SpamProtectionBundle\Command\RefreshIpReputationListsCommand;
 use FlorentinGarnier\SpamProtectionBundle\DependencyInjection\FlorentinGarnierSpamProtectionExtension;
 use FlorentinGarnier\SpamProtectionBundle\Form\SpamProtectionType;
+use FlorentinGarnier\SpamProtectionBundle\Lock\SymfonyTokenLock;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\FlockStore;
 
 final class FlorentinGarnierSpamProtectionExtensionTest extends TestCase
 {
@@ -36,6 +41,25 @@ final class FlorentinGarnierSpamProtectionExtensionTest extends TestCase
 
         self::assertInstanceOf(SpamProtectionType::class, $container->get('test.form_type'));
         self::assertInstanceOf(RefreshIpReputationListsCommand::class, $container->get('test.command'));
+    }
+
+    public function testItLocksTokensWithTheSymfonyLockFactoryByDefault(): void
+    {
+        $container = $this->loadExtension([]);
+
+        self::assertSame('lock.factory', (string) $container->getAlias('florentin_garnier_spam_protection.lock_factory'));
+        self::assertSame(SymfonyTokenLock::class, (string) $container->getDefinition(SingleUseTokenRegistry::class)->getArgument(1));
+
+        $container->compile();
+    }
+
+    public function testTheTokenLockCanBeDisabled(): void
+    {
+        $container = $this->loadExtension(['lock_factory' => null]);
+
+        self::assertFalse($container->has(SymfonyTokenLock::class));
+
+        $container->compile();
     }
 
     public function testItTagsTheServicesForTheFrameworkIntegrations(): void
@@ -94,6 +118,7 @@ final class FlorentinGarnierSpamProtectionExtensionTest extends TestCase
         $container->register('custom.cache', ArrayAdapter::class);
         $container->register('request_stack', RequestStack::class);
         $container->register('http_client', MockHttpClient::class);
+        $container->register('lock.factory', LockFactory::class)->addArgument(new Definition(FlockStore::class, [sys_get_temp_dir()]));
 
         (new FlorentinGarnierSpamProtectionExtension())->load([$config], $container);
 
