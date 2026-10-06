@@ -8,6 +8,13 @@ changes.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-10-06
+
+### Fixed
+
+- Release metadata only, no code change. The `v0.1.1` tag was rewritten after its publication on Packagist,
+  which keeps the original commit: `0.1.2` contains the same code and matches its Git tag. Prefer `0.1.2`.
+
 ## [0.1.1] - 2026-10-06
 
 ### Changed
@@ -25,6 +32,7 @@ changes.
 - Initial release: `SpamProtectionType` form type, JavaScript proof-of-work solver, `spam-protection:refresh-ip-lists` command, form theme, English / French / German translations and `spam_protection` Monolog channel.
 - Support for Symfony 5.4, 6.4, 7.4 and 8.x, tested on each of them.
 
-[Unreleased]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/FlorentinGarnier/spam-protection-bundle/releases/tag/v0.1.0
