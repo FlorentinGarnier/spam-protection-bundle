@@ -232,7 +232,8 @@ To test your own protected forms, use `SpamProtectionTestHelper` from the
 
 ## Contributing
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues privately, as
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[Code of Conduct](CODE_OF_CONDUCT.md). Report security issues privately, as
 described in [SECURITY.md](SECURITY.md).
 
 ## License
