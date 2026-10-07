@@ -215,6 +215,10 @@ monolog:
 The error message `florentin_garnier_spam_protection.invalid` is translated in English, French and German, in
 the `messages` domain. Override it in your application's translation files.
 
+The rejection adds a `FormError` whose message is already translated, as form themes render it as it is. Its
+message template remains the key: test `error.messageTemplate` to recognize the rejection, for example in a
+template.
+
 ## Production checklist
 
 - [ ] **Trusted proxies.** Behind a reverse proxy, configure `framework.trusted_proxies`. Otherwise every visitor

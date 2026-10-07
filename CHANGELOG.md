@@ -8,6 +8,18 @@ changes.
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-10-07
+
+### Fixed
+
+- The rejection message is translated. Form themes render the message of a `FormError` as it is, so the
+  visitor saw the translation key `florentin_garnier_spam_protection.invalid`. The key remains the message
+  template of the error.
+
+### Added
+
+- `symfony/translation-contracts` dependency.
+
 ## [0.2.1] - 2026-10-07
 
 ### Fixed
@@ -57,7 +69,8 @@ changes.
 - Initial release: `SpamProtectionType` form type, JavaScript proof-of-work solver, `spam-protection:refresh-ip-lists` command, form theme, English / French / German translations and `spam_protection` Monolog channel.
 - Support for Symfony 5.4, 6.4, 7.4 and 8.x, tested on each of them.
 
-[Unreleased]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/FlorentinGarnier/spam-protection-bundle/compare/v0.1.1...v0.1.2
