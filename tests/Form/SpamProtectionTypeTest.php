@@ -28,6 +28,8 @@ use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorTrait;
 
 final class SpamProtectionTypeTest extends TypeTestCase
 {
@@ -65,14 +67,24 @@ final class SpamProtectionTypeTest extends TypeTestCase
         $form = $this->submitForm(['fax_number' => 'https://spam.example']);
 
         self::assertFalse($form->isValid());
-        self::assertSame(SpamProtectionType::ERROR_MESSAGE, $form->getErrors()[0]->getMessage());
+        self::assertSame(SpamProtectionType::ERROR_MESSAGE, $form->getErrors()[0]->getMessageTemplate());
     }
 
     public function testItPutsTheErrorOnTheParentForm(): void
     {
         $form = $this->submitMessage('Bonjour', spamProtection: ['fax_number' => 'spam']);
 
-        self::assertSame(SpamProtectionType::ERROR_MESSAGE, $form->getErrors()[0]->getMessage());
+        self::assertSame(SpamProtectionType::ERROR_MESSAGE, $form->getErrors()[0]->getMessageTemplate());
+    }
+
+    /**
+     * Form themes render the message of a FormError as it is: it must already be translated.
+     */
+    public function testItTranslatesTheErrorMessage(): void
+    {
+        $form = $this->submitForm(['fax_number' => 'https://spam.example']);
+
+        self::assertSame('translated in messages: ' . SpamProtectionType::ERROR_MESSAGE, $form->getErrors()[0]->getMessage());
     }
 
     public function testItLogsTheRejectionWithoutPersonalData(): void
@@ -154,6 +166,16 @@ final class SpamProtectionTypeTest extends TypeTestCase
                 $this->requestStack,
                 self::SECRET,
                 $logger,
+                new class() implements TranslatorInterface {
+                    use TranslatorTrait {
+                        trans as private translate;
+                    }
+
+                    public function trans(?string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
+                    {
+                        return 'translated in ' . ($domain ?? 'messages') . ': ' . $this->translate($id, $parameters, $domain, $locale);
+                    }
+                },
             ),
         ], [])];
     }

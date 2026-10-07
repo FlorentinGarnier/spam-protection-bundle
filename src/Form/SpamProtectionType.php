@@ -29,6 +29,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SpamProtectionType extends AbstractType
 {
@@ -41,6 +42,7 @@ final class SpamProtectionType extends AbstractType
         private RequestStack $requestStack,
         private string $secret,
         ?LoggerInterface $logger = null,
+        private ?TranslatorInterface $translator = null,
     ) {
         $this->logger = $logger ?? new NullLogger();
     }
@@ -124,7 +126,15 @@ final class SpamProtectionType extends AbstractType
         }
 
         $this->logger->warning('Spam-protected form submission rejected.', $this->createLogContext($scope, $verdict));
-        ($form->getParent() ?? $form)->addError(new FormError(self::ERROR_MESSAGE));
+        ($form->getParent() ?? $form)->addError(new FormError($this->translateErrorMessage(), self::ERROR_MESSAGE));
+    }
+
+    /**
+     * Form themes render the message of a FormError as it is; the untranslated key remains its message template.
+     */
+    private function translateErrorMessage(): string
+    {
+        return $this->translator?->trans(self::ERROR_MESSAGE, [], 'messages') ?? self::ERROR_MESSAGE;
     }
 
     /**
