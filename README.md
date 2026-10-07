@@ -232,6 +232,7 @@ the `messages` domain. Override it in your application's translation files.
 ```bash
 composer install
 vendor/bin/phpunit
+node --test tests/js/*.test.mjs   # JavaScript solver, Node.js 22 or later
 ```
 
 To test your own protected forms, use `SpamProtectionTestHelper` from the

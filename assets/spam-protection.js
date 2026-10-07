@@ -91,5 +91,7 @@ document.addEventListener('submit', async (event) => {
     submitter.disabled = previousDisabledState;
   }
 
-  form.requestSubmit(submitter);
+  // A challenge can be solved before the browser has finished dispatching the submit event, and the browser ignores
+  // a submission requested meanwhile: submit again from a new task.
+  setTimeout(() => form.requestSubmit(submitter));
 });

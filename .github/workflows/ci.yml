@@ -36,3 +36,13 @@ jobs:
           tools: flex
       - uses: ramsey/composer-install@v3
       - run: vendor/bin/phpunit
+
+  javascript:
+    runs-on: ubuntu-latest
+    name: JavaScript solver
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/js/*.test.mjs

@@ -8,6 +8,16 @@ changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- The JavaScript solver submits the form again from a new task. When the proof of work was solved before the
+  browser had finished dispatching the submit event, Chrome ignored the new submission and the form was never
+  sent.
+
+### Added
+
+- Tests of the JavaScript solver, run with Node.js.
+
 ## [0.2.0] - 2026-10-06
 
 ### Security
