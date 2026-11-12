@@ -29,6 +29,7 @@ final class FlorentinGarnierSpamProtectionExtension extends Extension implements
         $container->setParameter('florentin_garnier_spam_protection.secret', $config['secret']);
         $container->setParameter('florentin_garnier_spam_protection.base_difficulty', $config['base_difficulty']);
         $container->setParameter('florentin_garnier_spam_protection.maximum_attempts_per_hour', $config['maximum_attempts_per_hour']);
+        $container->setParameter('florentin_garnier_spam_protection.own_hosts', $config['own_hosts']);
         $container->setParameter('florentin_garnier_spam_protection.ip_reputation.list_path', $config['ip_reputation']['list_path']);
         $container->setParameter('florentin_garnier_spam_protection.ip_reputation.sources', $config['ip_reputation']['sources']);
         $container->setAlias('florentin_garnier_spam_protection.cache', $config['cache_pool']);

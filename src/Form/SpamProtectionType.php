@@ -37,12 +37,16 @@ final class SpamProtectionType extends AbstractType
 
     private LoggerInterface $logger;
 
+    /**
+     * @param list<string> $ownHosts hosts of the site besides the one of the request
+     */
     public function __construct(
         private SpamProtection $spamProtection,
         private RequestStack $requestStack,
         private string $secret,
         ?LoggerInterface $logger = null,
         private ?TranslatorInterface $translator = null,
+        private array $ownHosts = [],
     ) {
         $this->logger = $logger ?? new NullLogger();
     }
@@ -102,7 +106,7 @@ final class SpamProtectionType extends AbstractType
         $resolver->setAllowedTypes('protection_scope', 'string');
         $resolver->setInfo('protection_scope', 'Identifies the form, so that tokens and rate limits are not shared between forms.');
         $resolver->setAllowedTypes('content_fields', 'string[]');
-        $resolver->setInfo('content_fields', 'Sibling fields whose free text is rejected when made of random characters.');
+        $resolver->setInfo('content_fields', 'Sibling fields whose free text is rejected when made of random characters, or when it links to another site from a risky IP address.');
     }
 
     /**
@@ -117,6 +121,7 @@ final class SpamProtectionType extends AbstractType
             proofOfWorkChallenge: (string) $form->get('proof_challenge')->getData(),
             proofOfWorkSolution: (string) $form->get('proof_solution')->getData(),
             contents: $this->collectContents($form->getParent(), $contentFields),
+            ownHosts: $this->getOwnHosts(),
         ), $this->getIpAddress());
 
         if ($verdict->isAccepted()) {
@@ -153,6 +158,18 @@ final class SpamProtectionType extends AbstractType
         }
 
         return $contents;
+    }
+
+    /**
+     * A visitor may always link to the site they are writing to.
+     *
+     * @return list<string>
+     */
+    private function getOwnHosts(): array
+    {
+        $requestHost = $this->requestStack->getCurrentRequest()?->getHost();
+
+        return null === $requestHost ? $this->ownHosts : [$requestHost, ...$this->ownHosts];
     }
 
     private function getIpAddress(): string

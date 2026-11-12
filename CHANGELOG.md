@@ -8,6 +8,17 @@ changes.
 
 ## [Unreleased]
 
+### Added
+
+- A submission is rejected when one of its content fields links to another site and its IP address is a
+  datacenter, a VPN or a Tor exit node (reason `external_link_from_risky_address`). Links to the host of the
+  request are always accepted.
+- `own_hosts` option, for the other hosts of a multi-domain site.
+
+### Changed
+
+- Requires florentingarnier/spam-protection 0.3.
+
 ## [0.2.2] - 2026-10-07
 
 ### Fixed
