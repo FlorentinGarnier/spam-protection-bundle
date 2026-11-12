@@ -112,6 +112,35 @@ final class SpamProtectionTypeTest extends TypeTestCase
         self::assertTrue($this->submitMessage('Hello, I would like a quote for a shelving unit.')->isValid());
     }
 
+    public function testItRejectsAMessageLinkingToAnotherSiteFromARiskyAddress(): void
+    {
+        $this->visitFrom(self::HOSTING_IP);
+
+        $form = $this->submitMessage('All the details are on https://offers.example/fr/shop');
+
+        self::assertFalse($form->isValid());
+        self::assertSame('external_link_from_risky_address', $this->lastLogContext()['reason']);
+    }
+
+    public function testItAcceptsAMessageLinkingToAnotherSiteFromANormalAddress(): void
+    {
+        self::assertTrue($this->submitMessage('All the details are on https://offers.example/fr/shop')->isValid());
+    }
+
+    public function testItAcceptsAMessageLinkingToTheSiteOfTheRequestFromARiskyAddress(): void
+    {
+        $this->visitFrom(self::HOSTING_IP);
+
+        self::assertTrue($this->submitMessage('Is https://www.shop.example/products/shelf-12 available in black?')->isValid());
+    }
+
+    public function testItAcceptsAMessageLinkingToAnotherHostOfTheSiteFromARiskyAddress(): void
+    {
+        $this->visitFrom(self::HOSTING_IP);
+
+        self::assertTrue($this->submitMessage('Is https://shop-pro.example/products/shelf-12 available in black?')->isValid());
+    }
+
     public function testItChallengesTheVisitorAccordingToItsIpAddress(): void
     {
         $this->requestStack->push(Request::create('/', 'GET', server: ['REMOTE_ADDR' => self::HOSTING_IP]));
@@ -176,8 +205,14 @@ final class SpamProtectionTypeTest extends TypeTestCase
                         return 'translated in ' . ($domain ?? 'messages') . ': ' . $this->translate($id, $parameters, $domain, $locale);
                     }
                 },
+                ['shop-pro.example'],
             ),
         ], [])];
+    }
+
+    private function visitFrom(string $ipAddress): void
+    {
+        $this->requestStack->push(Request::create('https://shop.example/contact', 'POST', server: ['REMOTE_ADDR' => $ipAddress]));
     }
 
     /**

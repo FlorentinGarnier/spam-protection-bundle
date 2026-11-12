@@ -78,6 +78,7 @@ final class FlorentinGarnierSpamProtectionExtensionTest extends TestCase
             'cache_pool' => 'custom.cache',
             'base_difficulty' => 12,
             'maximum_attempts_per_hour' => 50,
+            'own_hosts' => ['shop-pro.example'],
             'ip_reputation' => ['list_path' => '/tmp/list.php', 'sources' => ['tor' => ['https://lists.example/tor.txt']]],
         ]);
 
@@ -85,6 +86,7 @@ final class FlorentinGarnierSpamProtectionExtensionTest extends TestCase
         self::assertSame('custom.cache', (string) $container->getAlias('florentin_garnier_spam_protection.cache'));
         self::assertSame(12, $container->getParameter('florentin_garnier_spam_protection.base_difficulty'));
         self::assertSame(50, $container->getParameter('florentin_garnier_spam_protection.maximum_attempts_per_hour'));
+        self::assertSame(['shop-pro.example'], $container->getParameter('florentin_garnier_spam_protection.own_hosts'));
         self::assertSame('/tmp/list.php', $container->getParameter('florentin_garnier_spam_protection.ip_reputation.list_path'));
         self::assertSame(['https://lists.example/tor.txt'], $container->getParameter('florentin_garnier_spam_protection.ip_reputation.sources')['tor']);
     }

@@ -70,6 +70,7 @@ return static function (ContainerConfigurator $container): void {
             param('florentin_garnier_spam_protection.secret'),
             service('logger')->nullOnInvalid(),
             service('translator')->nullOnInvalid(),
+            param('florentin_garnier_spam_protection.own_hosts'),
         ])
         ->tag('form.type')
         ->tag('monolog.logger', ['channel' => 'spam_protection']);

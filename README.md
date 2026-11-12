@@ -63,6 +63,9 @@ florentin_garnier_spam_protection:
     base_difficulty: 10
     # Weighted attempts allowed per form and IP address before submissions are rejected.
     maximum_attempts_per_hour: 20
+    # Hosts of the site besides the one of the request, such as the other domains of a multi-domain site:
+    # a link to them, or to their subdomains, is not external.
+    own_hosts: []
     ip_reputation:
         # Compiled lists, written by the console command and read by every web server.
         list_path: '%kernel.project_dir%/var/spam_protection/ip_reputation.php'
@@ -93,10 +96,14 @@ $builder->add('spam_protection', SpamProtectionType::class, [
 | Option | Default | Description |
 |--------|---------|-------------|
 | `protection_scope` | `'unknown'` | Identifies the form: tokens and rate limits are not shared between forms. Give each form its own scope. |
-| `content_fields` | `[]` | Sibling fields whose free text is rejected when made of random characters. |
+| `content_fields` | `[]` | Sibling fields whose free text is rejected when made of random characters, or when it links to another site from a datacenter, a VPN or Tor. |
 
 The field is not mapped. When a submission is rejected, the error `florentin_garnier_spam_protection.invalid`
 is added to the parent form, so it shows up with the global form errors.
+
+A link in a content field is accepted from a normal IP address, whatever it points to. From a datacenter, a VPN
+or a Tor exit node, only links to the host of the request and to `own_hosts` are accepted: see the
+[library](https://github.com/FlorentinGarnier/spam-protection#external-links).
 
 ### 2. Render it
 
